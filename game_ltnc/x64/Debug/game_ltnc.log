@@ -1,0 +1,4 @@
+﻿  ChasingMonster.cpp
+C:\game_ltnc\game_ltnc\ChasingMonster.cpp(24,22): error C2511: 'void ChasingMonster::Move(MainObject,GameMap &)': overloaded member function not found in 'ChasingMonster'
+C:\game_ltnc\game_ltnc\ChasingMonster.h(8,7): message : see declaration of 'ChasingMonster'
+C:\game_ltnc\game_ltnc\ChasingMonster.cpp(40,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
