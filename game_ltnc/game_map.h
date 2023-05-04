@@ -23,7 +23,7 @@ public:
 	void DrawMap(SDL_Renderer* screen);
 	Map getMap() const { return game_map_; };
 	void setMap(Map& map_data) { game_map_ = map_data; };
-	SDL_Point ToScreenCoordinates(int map_x, int map_y, const Map& map_data);
+	SDL_Point ToScreenCoordinates(int map_x, int map_y, const Map& map_data) const;
 
 private:
 	Map game_map_;

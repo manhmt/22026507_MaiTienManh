@@ -103,7 +103,7 @@ void GameMap::DrawMap(SDL_Renderer* screen)
 	}
 }
 
-SDL_Point GameMap::ToScreenCoordinates(int map_x, int map_y, const Map& map_data) {
+SDL_Point GameMap::ToScreenCoordinates(int map_x, int map_y, const Map& map_data) const{
 	SDL_Point screen_coords;
 	screen_coords.x = map_x - map_data.start_x_;
 	screen_coords.y = map_y - map_data.start_y_;

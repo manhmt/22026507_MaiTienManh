@@ -143,10 +143,13 @@
     <ClCompile Include="BulletObject.cpp" />
     <ClCompile Include="ChasingMonster.cpp" />
     <ClCompile Include="CommonFunc.cpp" />
+    <ClCompile Include="ExplosionObject.cpp" />
     <ClCompile Include="game_map.cpp" />
     <ClCompile Include="ImpTimer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainObject.cpp" />
+    <ClCompile Include="PlayerPower.cpp" />
+    <ClCompile Include="TextObject.cpp" />
     <ClCompile Include="ThreatObject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,9 +157,12 @@
     <ClInclude Include="BulletObject.h" />
     <ClInclude Include="ChasingMonster.h" />
     <ClInclude Include="CommonFunc.h" />
+    <ClInclude Include="ExplosionObject.h" />
     <ClInclude Include="game_map.h" />
     <ClInclude Include="ImpTimer.h" />
     <ClInclude Include="MainObject.h" />
+    <ClInclude Include="PlayerPower.h" />
+    <ClInclude Include="TextObject.h" />
     <ClInclude Include="ThreatObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

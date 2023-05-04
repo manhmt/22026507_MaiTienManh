@@ -139,26 +139,31 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 	{
 		switch (events.key.keysym.sym)
 		{
-			case SDLK_RIGHT:
-			{
-				status_ = WALK_RIGHT;
-				input_type_.right_ = 1;
-				input_type_.left_ = 0;
-				UpdateImagePlayer(screen);
-			}
-			break;
-			case SDLK_LEFT:
-			{
-				status_ = WALK_LEFT;
-				input_type_.left_ = 1;
-				input_type_.right_ = 0;
-				UpdateImagePlayer(screen);
-			} 
-			break;
-			}
-		}
-		else if (events.type == SDL_KEYUP)
+		case SDLK_RIGHT:
 		{
+			status_ = WALK_RIGHT;
+			input_type_.right_ = 1;
+			input_type_.left_ = 0;
+			UpdateImagePlayer(screen);
+		}
+		break;
+		case SDLK_LEFT:
+		{
+			status_ = WALK_LEFT;
+			input_type_.left_ = 1;
+			input_type_.right_ = 0;
+			UpdateImagePlayer(screen);
+		}
+		break;
+		case SDLK_UP:
+		{
+			input_type_.jump_ = 1;
+		}
+		break;
+		}
+	}
+	else if (events.type == SDL_KEYUP)
+	{
 		switch (events.key.keysym.sym)
 		{
 		case SDLK_RIGHT:
@@ -171,16 +176,17 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 			input_type_.left_ = 0;
 		}
 		break;
+		case SDLK_UP:
+		{
+			input_type_.jump_ = 0;
 		}
+		break;
 
 		}
+	}
 	if (events.type == SDL_MOUSEBUTTONDOWN)
 	{
-		if (events.button.button == SDL_BUTTON_RIGHT)
-		{
-			input_type_.jump_ = 1;
-		}
-		else if (events.button.button == SDL_BUTTON_LEFT)
+		if (events.button.button == SDL_BUTTON_LEFT)
 		{
 			BulletObject* p_bullet = new BulletObject();
 			p_bullet->set_bullet_type(BulletObject::LASER_BULLET);

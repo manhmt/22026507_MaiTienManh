@@ -5,8 +5,14 @@
 #include "ImpTimer.h"
 #include "ThreatObject.h" 
 #include "ChasingMonster.h"
-BaseObject g_background;
+#include "ExplosionObject.h"
+#include "TextObject.h"
+#include "PlayerPower.h"
 
+// Global background object
+BaseObject g_background;
+TTF_Font* font_time;
+// Initializes SDL and related components, returns true on success
 bool InitData()
 {
     bool success = true;
@@ -39,6 +45,15 @@ bool InitData()
             if (!(IMG_Init(imgFlags) && imgFlags))
                 success = false;
         }
+        if (TTF_Init() == -1)
+        {
+            success = false;
+        }
+        font_time = TTF_OpenFont("font//dlxfont_.ttf", 15);
+        if (font_time == NULL)
+        {
+            success = false;
+        }
     }
     return success;
 }
@@ -53,6 +68,7 @@ bool LoadBackground()
     return true;
 }
 
+// Frees resources and quits SDL
 void close()
 {
     g_background.Free();
@@ -67,6 +83,7 @@ void close()
     SDL_Quit();
 }
 
+// Creates a list of Threat objects (enemies)
 std::vector<ThreatObject*> MakeThreatList()
 {
     std::vector<ThreatObject*> list_threats;
@@ -82,8 +99,8 @@ std::vector<ThreatObject*> MakeThreatList()
             p_threat->set_x_pos(500 + i * 500);
             p_threat->set_y_pos(200);
 
-            int pos1 = p_threat->get_x_pos() - 100; 
-            int pos2 = p_threat->get_x_pos() + 100;
+            float pos1 = p_threat->get_x_pos() - 100; 
+            float pos2 = p_threat->get_x_pos() + 100;
             p_threat->SetAnimationPos(pos1, pos2);
             p_threat->set_input_left(1);
 
@@ -116,6 +133,7 @@ std::vector<ThreatObject*> MakeThreatList()
 
 int main(int argc, char* argv[])
 {
+    // Timers for FPS and ChasingMonster
     ImpTimer fps_timer;
     ImpTimer chasing_monster_timer;
 
@@ -128,29 +146,52 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+
+    // Load game map and tiles
     GameMap game_map;
     game_map.LoadMap("map/map01.dat");
     game_map.LoadTiles(g_screen);
 
+    // Initialize main character (player)
     MainObject p_player;
     p_player.LoadImg("img/player_right.png", g_screen);
     p_player.set_clips();
-
+    p_player.SetRect(150, 50);
+    PlayerPower player_power;
+    player_power.Init(g_screen);
+    // Create a list of threats (enemies)
     std::vector<ThreatObject*> threats_list = MakeThreatList();
 
-    //heart
+    // Variable to count the number of times the player has died
     int num_die = 0;
+
+    //Time text
+    TextObject time_game;
+    time_game.SetColor(TextObject::BLACK_TEXT);
+
+    TextObject mark_game;
+    mark_game.SetColor(TextObject::WHITE_TEXT);
+    UINT mark_value = 0;
+
+    TextObject money_game;
+    money_game.SetColor(TextObject::BLACK_TEXT);
 
     bool is_quit = false;
 
-    //Chasing Monster
+    // Initialize chasing monster
     ChasingMonster chasing_monster;
     chasing_monster.LoadImg("img/chasing_monster.jpg", g_screen);
     chasing_monster.SetRect(200, 200);
     chasing_monster.SetSpeed(1); // Adjust speed as desired
 
+    ExplosionObject exp_threat;
+    bool tRet = exp_threat.LoadImg("img//exp3.png", g_screen);
+    if (!tRet) return -1;
+    exp_threat.set_clip();
+
     while (!is_quit)
     {
+        // Start FPS timer
         fps_timer.start();
         while (SDL_PollEvent(&g_event) != 0)
         {
@@ -177,6 +218,7 @@ int main(int argc, char* argv[])
         game_map.setMap(map_data);
         game_map.DrawMap(g_screen);
 
+        player_power.Show(g_screen);
         //Chasing Monster
         chasing_monster.Move(p_player, game_map);
         chasing_monster.Show(g_screen);
@@ -186,19 +228,24 @@ int main(int argc, char* argv[])
         SDL_Rect rect_chasing_monster = chasing_monster.GetRect();
         bool is_collision = SDLCommonFunc::CheckCollision(rect_player, rect_chasing_monster);
 
-        if (is_collision) {
+        /*if (is_collision) {
             // Take appropriate action upon collision
             // e.g. reduce player health, restart the level, etc.
             num_die++;
             if (num_die <= 3) {
                 p_player.SetRect(0, 0);
                 p_player.set_comeback_time(60);
-                SDL_Delay(2000);
+                SDL_Delay(1000);
+                player_power.Decrease();
+                player_power.Render(g_screen);
                 continue;
             }
-        }
+        }*/
+        
+        
             // You can add more actions here based on your game design
 
+         // Iterate through threats and perform actions
         for (int i = 0; i < threats_list.size(); i++)
         {
             ThreatObject* p_threat = threats_list.at(i);
@@ -207,9 +254,11 @@ int main(int argc, char* argv[])
                 p_threat->SetMapXY(map_data.start_x_, map_data.start_y_);
                 p_threat->ImpMoveType(g_screen);
                 p_threat->DoPlayer(map_data);
-                p_threat->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT);
+                //p_threat->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT);
+                p_threat->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT, p_player.GetRect().x, p_player.GetRect().y);
                 p_threat->Show(g_screen);
-
+                
+                 
                 SDL_Rect rect_player = p_player.GetRectFrame();
                 bool bCol1 = false;
                 std::vector<BulletObject*> tBullet_list = p_threat->get_bullet_list();
@@ -221,38 +270,61 @@ int main(int argc, char* argv[])
                         bCol1 = SDLCommonFunc::CheckCollision(pt_bullet->GetRect(), rect_player);
                         if (bCol1)
                         {
-                            p_threat->RemoveBullet(ij);
-                            break;
+                            //p_threat->RemoveBullet(ij);
+                            //break;
                         }
                     }
                 }
+                
+                
                 SDL_Rect rect_threat = p_threat->GetRectFrame();
                 bool bCol2 = SDLCommonFunc::CheckCollision(rect_player, rect_threat);
                 if (bCol1 || bCol2)
-                {
+                {   
+                    //p_player.set_comeback_time(40);
+
+                    /*int width_exp_frame = exp_main;
+                    for (int ex = 0; ex < NUM_FRAME_EXP; ++ex)
+                    {
+                        int x_pos_ = p_player.GetRect().x - p_player.get_frame_width * 0.5;
+                        int y_pos_ = p_player.GetRect().y - frame_exp_height * 0.5;
+
+                        exp_threat.set_frame(ex);
+                        exp_threat.SetRect(x_pos_, y_pos_);
+                        exp_threat.Show(g_screen);
+
+                        SDL_RenderPresent(g_screen);
+                    }
+                    
                     num_die++;
                     if (num_die <= 3)
                     {
                         p_player.SetRect(0, 0);
-                        p_player.set_comeback_time(60);
-                        SDL_Delay(2000);
+                        p_player.set_comeback_time(4);
+                        SDL_Delay(1000);
                         continue;
                     }
+                
+                    
                     /*else
                     {
-                        if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+                        if (MessageBox(NULL, L"Game Over...", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
                         {
                             p_threat->Free();
                             close();
                             SDL_Quit();
                             return 0;
+
                         }
                     }
                     */
-                }              
+                    
+                }       
+                          
             }
         }
-        SDL_RenderPresent(g_screen);
+        int frame_exp_width = exp_threat.get_frame_width();
+        int frame_exp_height = exp_threat.get_frame_height();
 
         std::vector<BulletObject*> bullet_arr = p_player.get_bullet_list_();
         for (int r = 0; r < bullet_arr.size(); ++r)
@@ -278,6 +350,21 @@ int main(int argc, char* argv[])
 
                         if (bCol)
                         {
+                            //continue adjust
+                            mark_value++;
+                            for (int ex = 0; ex < NUM_FRAME_EXP; ++ex)
+                            {
+                                int x_pos_ = p_bullet->GetRect().x - frame_exp_width * 0.5;
+                                int y_pos_ = p_bullet->GetRect().y - frame_exp_height * 0.5;
+
+                                exp_threat.set_frame(ex);
+                                exp_threat.SetRect(x_pos_, y_pos_);
+                                exp_threat.Show(g_screen);
+
+                                SDL_RenderPresent(g_screen);
+                                //SDL_Delay(50);
+                            }
+
                             p_player.RemoveBullet(r);
                             obj_threat->Free();
                             threats_list.erase(threats_list.begin() + t);
@@ -287,6 +374,47 @@ int main(int argc, char* argv[])
                 }
             }
         }
+        //Show time game
+        std::string str_time = "Time: ";
+        Uint32 time_val = SDL_GetTicks() / 1000;
+        Uint32 val_time = 300 - time_val;
+        if (val_time <= 0)
+        {
+            if (MessageBox(NULL, L"Game Over...", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+            {
+                is_quit = true;
+                break;
+
+            }
+        }
+        else
+        {
+            std::string str_val = std::to_string(val_time);
+            str_time += str_val;
+
+            time_game.SetText(str_time);
+            time_game.LoadFromRenderText(font_time, g_screen);
+            time_game.RenderText(g_screen, SCREEN_WIDTH - 200, 15);
+        }
+
+        std::string val_str_mark = std::to_string(mark_value);
+        std::string strMark("Mark: ");
+        strMark += val_str_mark;
+
+        mark_game.SetText(strMark);
+        mark_game.LoadFromRenderText(font_time, g_screen);
+        mark_game.RenderText(g_screen, SCREEN_WIDTH * 0.5, 15);
+
+        int money_count = p_player.GetMoneyCount();
+        std::string money_str = std::to_string(money_count);
+
+        money_game.SetText(money_str);
+        money_game.LoadFromRenderText(font_time, g_screen);
+        money_game.RenderText(g_screen, SCREEN_WIDTH * 0.5 - 200, 15);
+
+
+        SDL_RenderPresent(g_screen);
+
         int real_imp_time = fps_timer.get_ticks();
         int time_one_frame = 1000 / FRAME_PER_SECOND;
 
@@ -300,6 +428,7 @@ int main(int argc, char* argv[])
         }
     }
 
+    // Clean up threats and close SDL
     for (int i = 0; i < threats_list.size(); i++)
     {
         ThreatObject* p_threat = threats_list.at(i);

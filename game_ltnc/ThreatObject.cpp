@@ -17,7 +17,6 @@
 		input_type_.left_ = 1;
 		input_type_.right_ = 0;
 		type_move_ = STATIC_THREAT;
-
 	}
 	ThreatObject::~ThreatObject()
 	{
@@ -321,8 +320,14 @@
 		}
 	}
 
-	void ThreatObject::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit)
-	{
+	/*void ThreatObject::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit)
+	{	
+		int distance_threshold = 200;  // Set the distance threshold for the enemy to start shooting
+
+		int distance_to_player = sqrt(pow(rect_.x - p_player.x, 2) + pow(rect_.y - player_y, 2));
+
+		if (distance_to_player <= distance_threshold)
+		{
 		for (int i = 0; i < bullet_list_.size(); i++)
 		{
 			BulletObject* p_bullet = bullet_list_.at(i);
@@ -348,4 +353,41 @@
 				}
 			}
 		}
-	}  
+	} 
+	*/
+	void ThreatObject::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit, const int& player_x, const int& player_y)
+	{
+		int distance_threshold = 600;  // Set the distance threshold for the enemy to start shooting
+
+		int distance_to_player = sqrt(pow(rect_.x - player_x, 2) + pow(rect_.y - player_y, 2));
+
+		if (distance_to_player <= distance_threshold)
+		{
+			for (int i = 0; i < bullet_list_.size(); i++)
+			{
+				BulletObject* p_bullet = bullet_list_.at(i);
+				if (p_bullet != NULL)
+				{
+					if (p_bullet->get_is_move())
+					{
+						int bullet_distance = rect_.x + width_frame_ - p_bullet->GetRect().x;
+						if (bullet_distance < 600 && bullet_distance >= 0)
+						{
+							p_bullet->HandleMove(x_limit, y_limit);
+							p_bullet->Render(screen);
+						}
+						else
+						{
+							p_bullet->set_is_move(false);
+						}
+					}
+					else
+					{
+						p_bullet->set_is_move(true);
+						p_bullet->SetRect(rect_.x + 10, rect_.y + 10);
+					}
+				}
+			}
+		}
+	}
+

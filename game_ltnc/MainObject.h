@@ -7,10 +7,10 @@
 #include "BulletObject.h"
 
 
-#define  GRAVITY_SPEED 0.8;
-static constexpr double MAX_FALL_SPEED = 8.0; // Adjust the value as needed
-#define  PLAYER_SPEED 4;
-#define PLAYER_JUMP_VALUE 20;
+#define  GRAVITY_SPEED 0.4f;
+static constexpr double MAX_FALL_SPEED = 10.0; // Adjust the value as needed
+#define  PLAYER_SPEED 8;
+#define PLAYER_JUMP_VALUE 14;
 class MainObject : public BaseObject
 {
 public:
@@ -27,6 +27,7 @@ public:
 	void Show(SDL_Renderer* des);
 	void HandleInputAction(SDL_Event events, SDL_Renderer* screen);
 	void set_clips();
+
 	void DoPlayer(Map& map_data);
 	void CheckToMap(Map& map_data);
 	void setMapXY(const int map_x, const int map_y) { map_x_ = map_x; map_y_ = map_y; };
@@ -44,9 +45,15 @@ public:
 	void IncreaseMoney();
 
 	void set_comeback_time(const int& cb_time) { come_back_time_ = cb_time; }
+
+	float GetXPos() const { return x_pos_; }
+	float GetYPos() const { return y_pos_; }
+	
+	int GetMoneyCount() const { return money_count; }
 private:
 	std::vector<BulletObject*> p_bullet_list_;
 	int money_count;
+
 	float x_val_;
 	float y_val_;
 

@@ -54,7 +54,8 @@ public:
 	void set_bullet_list(const std::vector<BulletObject*>& bl_list) { bullet_list_ = bl_list; }
 
 	void InitBullet(BulletObject* p_bullet, SDL_Renderer* screen);
-	void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit); 
+	//void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit); 
+	void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit, const int& player_x, const int& player_y);
 	void RemoveBullet(const int& idx);
 
 private:
@@ -66,7 +67,7 @@ private:
 	int map_y_;
 	bool on_ground_;
 	int come_back_time_;
-	SDL_Rect frame_clip_[THREAT_FRAME_NUM];
+	SDL_Rect frame_clip_[THREAT_FRAME_NUM] = {};
 	int frame_;
 	int height_frame_;
 	int width_frame_;
