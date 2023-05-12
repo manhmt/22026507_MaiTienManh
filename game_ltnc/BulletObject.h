@@ -3,7 +3,7 @@
 
 #include "BaseObject.h"
 #include "CommonFunc.h"
-
+#define BULLET_SPEED 3
 class BulletObject : public BaseObject
 {
 
@@ -42,12 +42,15 @@ public:
 
 	void set_bullet_type(const int& bulletType) { bullet_type_ = bulletType; }
 	int get_bullet_type() const { return bullet_type_; }
+	//void SetDirection(int x_target, int y_target, int x_origin, int y_origin, double speed);
 
 private:
+
 	int x_val_;
 	int y_val_;
 	bool is_move_;
 	int bullet_dir_;
 	int bullet_type_;
+
 };
 #endif

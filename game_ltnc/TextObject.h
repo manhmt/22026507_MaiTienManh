@@ -33,6 +33,8 @@ public:
 	
 	void SetText(const std::string& text) { str_val_ = text; }
 	std::string GetText() const { return str_val_; } 
+	SDL_Rect GetRect(int x, int y) const;
+	void SetFont(const std::string& font_path);
 
 private:
 	std::string  str_val_;
@@ -40,6 +42,7 @@ private:
 	SDL_Texture* texture_;
 	int width_;
 	int height_;
+	TTF_Font* font;
 };
 
 #endif

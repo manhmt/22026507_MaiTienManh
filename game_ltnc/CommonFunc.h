@@ -8,11 +8,13 @@
 #include <windows.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
+#include "TextObject.h"
+#include <iostream>
 static SDL_Window* g_window = NULL;
 static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;
 
-const int FRAME_PER_SECOND = 40;
+const int FRAME_PER_SECOND = 45;
 //Screen
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 640;
@@ -55,5 +57,10 @@ struct Map
 namespace SDLCommonFunc
 {
 	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
+	//int ShowMenu(SDL_Surface* des, TTF_Font* font);
+	//DL_Surface* LoadImg(const std::string& file_path);
+	//bool CheckFocusWithRect(const int& x, const int& y, const SDL_Rect& rect);
+	//SDL_Rect ApplySurface(SDL_Surface* src, SDL_Surface* dest, int x, int y);
+
 }
 #endif

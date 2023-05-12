@@ -3,8 +3,8 @@
 MainObject::MainObject()
 {
 	frame_ = 0;
-	x_pos_ = 0;
-	y_pos_ = 0;
+	x_pos_ = 100;
+	y_pos_ = 100; //8/5
 	x_val_ = 0;
 	y_val_ = 0;
 	width_frame_ = 0;
@@ -58,8 +58,8 @@ void MainObject::set_clips()
 {
 	if (width_frame_ > 0 && height_frame_ > 0)
 	{
-		
-		
+
+
 		frame_clip_[0].x = 0;
 		frame_clip_[0].y = 0;
 		frame_clip_[0].w = width_frame_;
@@ -70,32 +70,32 @@ void MainObject::set_clips()
 		frame_clip_[1].w = width_frame_;
 		frame_clip_[1].h = height_frame_;
 
-		frame_clip_[2].x = 2*width_frame_;
+		frame_clip_[2].x = 2 * width_frame_;
 		frame_clip_[2].y = 0;
 		frame_clip_[2].w = width_frame_;
 		frame_clip_[2].h = height_frame_;
 
-		frame_clip_[3].x = 3*width_frame_;
+		frame_clip_[3].x = 3 * width_frame_;
 		frame_clip_[3].y = 0;
 		frame_clip_[3].w = width_frame_;
 		frame_clip_[3].h = height_frame_;
 
-		frame_clip_[4].x = 4*width_frame_;
+		frame_clip_[4].x = 4 * width_frame_;
 		frame_clip_[4].y = 0;
 		frame_clip_[4].w = width_frame_;
 		frame_clip_[4].h = height_frame_;
 
-		frame_clip_[5].x = 5*width_frame_;
+		frame_clip_[5].x = 5 * width_frame_;
 		frame_clip_[5].y = 0;
 		frame_clip_[5].w = width_frame_;
 		frame_clip_[5].h = height_frame_;
 
-		frame_clip_[6].x = 6*width_frame_;
+		frame_clip_[6].x = 6 * width_frame_;
 		frame_clip_[6].y = 0;
 		frame_clip_[6].w = width_frame_;
 		frame_clip_[6].h = height_frame_;
 
-		frame_clip_[7].x = 7*width_frame_;
+		frame_clip_[7].x = 7 * width_frame_;
 		frame_clip_[7].y = 0;
 		frame_clip_[7].w = width_frame_;
 		frame_clip_[7].h = height_frame_;
@@ -107,7 +107,7 @@ void MainObject::set_clips()
 void MainObject::Show(SDL_Renderer* des)
 {
 	UpdateImagePlayer(des);
-	
+
 
 	if (input_type_.left_ == 1 || input_type_.right_ == 1)
 	{
@@ -283,7 +283,7 @@ void MainObject::DoPlayer(Map& map_data)
 	}
 	if (come_back_time_ > 0)
 	{
-		come_back_time_ --;
+		come_back_time_--;
 		if (come_back_time_ == 0)
 		{
 			on_ground_ = false;
@@ -322,7 +322,7 @@ void MainObject::centerEntityOnMap(Map& map_data)
 		map_data.start_y_ = map_data.max_y_ - SCREEN_HEIGHT;
 	}
 
-	
+
 }
 
 void MainObject::CheckToMap(Map& map_data)
@@ -380,7 +380,7 @@ void MainObject::CheckToMap(Map& map_data)
 					x_val_ = 0;
 				}
 			}
-		} 
+		}
 	}
 	//Check vertical
 	int width_min = width_frame_ < TILE_SIZE ? width_frame_ : TILE_SIZE;
@@ -405,11 +405,12 @@ void MainObject::CheckToMap(Map& map_data)
 			{
 				if (val1 != BLANK_TILE || val2 != BLANK_TILE)
 				{
-					y_pos_ = y2 * TILE_SIZE;
-					y_pos_ -= height_frame_ + 1;
+					//y_pos_ = y2 * TILE_SIZE - height_frame_ - 1;
+					//y_pos_ -= height_frame_ + 1;
 					y_val_ = 0;
 
 					on_ground_ = true;
+
 					if (status_ == WALK_NONE)
 					{
 						status_ = WALK_RIGHT;
@@ -442,7 +443,7 @@ void MainObject::CheckToMap(Map& map_data)
 	if (x_pos_ < 0) {
 		x_pos_ = 0;
 	}
-	else if(x_pos_ + width_frame_ > map_data.max_x_)
+	else if (x_pos_ + width_frame_ > map_data.max_x_)
 	{
 		x_pos_ = map_data.max_x_ - width_frame_ - 1;
 	}

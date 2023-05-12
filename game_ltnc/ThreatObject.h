@@ -58,6 +58,11 @@ public:
 	void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit, const int& player_x, const int& player_y);
 	void RemoveBullet(const int& idx);
 
+	//05/05/2023
+	bool IsObstacle(Map& map_data, int x, int y);
+	bool IsPositionValid(Map& map_data, int new_x, int new_y);
+
+
 private:
 	float x_pos_; 
 	float y_pos_;

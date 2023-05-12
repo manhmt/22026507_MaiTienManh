@@ -6,10 +6,13 @@ TextObject::TextObject()
 	text_color_.g = 255;
 	text_color_.b = 255;
 	texture_ = NULL;
+	font = nullptr;
 }
 TextObject::~TextObject()
 {
-
+	if (font != nullptr) {
+		TTF_CloseFont(font);
+	}
 }
 
 bool TextObject::LoadFromRenderText(TTF_Font* font, SDL_Renderer* screen)
@@ -74,4 +77,28 @@ void TextObject::RenderText(SDL_Renderer* screen,
 		renderQuad.h = clip->h;
 	}
 	SDL_RenderCopyEx(screen, texture_, clip, &renderQuad, angle, center, flip);
+}
+SDL_Rect TextObject::GetRect(int x, int y) const
+{
+	SDL_Rect rect;
+	rect.x = x;
+	rect.y = y;
+	rect.w = width_;
+	rect.h = height_;
+	return rect;
+}
+void TextObject::SetFont(const std::string& font_path) {
+	// Load the font from the specified path
+	TTF_Font* new_font = TTF_OpenFont(font_path.c_str(), 44);
+	if (new_font == nullptr) {
+		std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+		return;
+	}
+
+	// Set the font as the rendering font for this text object
+	if (font != NULL)
+	{
+		TTF_CloseFont(font);
+	}
+	font = new_font;
 }

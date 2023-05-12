@@ -144,10 +144,12 @@
     <ClCompile Include="ChasingMonster.cpp" />
     <ClCompile Include="CommonFunc.cpp" />
     <ClCompile Include="ExplosionObject.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="game_map.cpp" />
     <ClCompile Include="ImpTimer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainObject.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="PlayerPower.cpp" />
     <ClCompile Include="TextObject.cpp" />
     <ClCompile Include="ThreatObject.cpp" />
@@ -158,9 +160,11 @@
     <ClInclude Include="ChasingMonster.h" />
     <ClInclude Include="CommonFunc.h" />
     <ClInclude Include="ExplosionObject.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="game_map.h" />
     <ClInclude Include="ImpTimer.h" />
     <ClInclude Include="MainObject.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="PlayerPower.h" />
     <ClInclude Include="TextObject.h" />
     <ClInclude Include="ThreatObject.h" />
