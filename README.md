@@ -23,7 +23,8 @@ Có các cấp độ khó khác nhau cho người chơi lựa chọn.
 Đề xuất hướng cải thiện game tiếp theo
 Thêm tính năng nhặt súng, đạn. Khi nhặt được sẽ thay đổi loại đạn bắn ra.
 Thêm một con boss ở cuối game.
-Thêm các vật phẩm, ví dụ như ăn vào tăng tốc độ,...
+Thêm các vật phẩm, ví dụ như ăn vào tăng tốc độ, miễn thương, thêm mạng sống...
+Thêm bảng xếp hạng lưu giữ điểm số
 
 Tài liệu tham khảo
 Lazy Foo' SDL2 Tutorials
